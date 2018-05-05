@@ -22,10 +22,10 @@ class BChainIdentity extends Module {
 		$this->displayName = $this->l('BChainIdentity');
 		$this->description = $this->l('Use the blockchain to prevent fraudulent registrations and logins.');
 
-		$this->confirmUninstall = $this->l('Are you sure you want to uninstall?');
+		$this->confirmUninstall = $this->l('Wollen Sie das Modul wirklich deinstallieren?');
 
 		if (!Configuration::get('MYMODULE_NAME')) {
-			$this->warning = $this->l('No name provided');
+			$this->warning = $this->l('Kein Name gegeben');
 		}
 	}
 
@@ -125,7 +125,7 @@ class BChainIdentity extends Module {
 			else
 			{
 				Configuration::updateValue('REST_HOOK', $my_module_name);
-				$output .= $this->displayConfirmation($this->l('Einstellungen geändert'));
+				$output .= $this->displayConfirmation($this->l('Einstellungen gespeichert'));
 			}
 		}
 		return $output.$this->displayForm();

@@ -83,7 +83,7 @@ class CustomerLoginFormCore extends AbstractForm
 							'publickey' => $_COOKIE["publickey"]
 						], 'POST');
 						if(!$auth) {
-							$this->errors[''][] = $this->translator->trans('Authentication failed.', [], 'Shop.Notifications.Error');
+							$this->errors[''][] = $this->translator->trans('Blockchain authentication failed.', [], 'Shop.Notifications.Error');
 						}
 					} else {
 						$this->errors[''][] = $this->translator->trans('Authentication failed.', [], 'Shop.Notifications.Error');
