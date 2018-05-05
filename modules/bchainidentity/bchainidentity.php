@@ -14,9 +14,9 @@ class BChainIdentity extends Module {
 		$this->version = '1.0.0';
 		$this->author = 'BChainIdentity';
 		$this->need_instance = 0;
-		$this->ps_versions_compliancy = array('min' => '1.6', 'max' => _PS_VERSION_); 
+		$this->ps_versions_compliancy = array('min' => '1.6', 'max' => _PS_VERSION_);
 		$this->bootstrap = true;
-		
+
 		parent::__construct();
 
 		$this->displayName = $this->l('BChainIdentity');
@@ -139,10 +139,11 @@ class BChainIdentity extends Module {
 	 *
 	 * @return array
 	 */
-	public function cURL($request = [], $method = 'GET') {
+	public function cURL($verb, $request = [], $method = 'GET') {
 		if($method == "GET") { $post = 0; } else { $post = 1; }
 
-		$url = strval(Tools::getValue('REST_HOOK'));
+		$url = /*strval(Tools::getValue('REST_HOOK')).*/'http://localhost:4000/api/'.$verb;
+		//print_r($url);
 
 		$ch = curl_init();
 
@@ -153,7 +154,10 @@ class BChainIdentity extends Module {
 			CURLOPT_POST => $post,
 			CURLOPT_POSTFIELDS => http_build_query($request),
 			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_TIMEOUT => 30
+			CURLOPT_TIMEOUT => 30,
+			CURLOPT_HTTPHEADER => [
+				'Content-Type: application/x-www-form-urlencoded'
+			]
 		]);
 
 		$server_output = curl_exec ($ch);
