@@ -130,4 +130,36 @@ class BChainIdentity extends Module {
 		}
 		return $output.$this->displayForm();
 	}
+
+	/**
+	 * Execute CURL request.
+	 *
+	 * @param array $request
+	 * @param string $method
+	 *
+	 * @return array
+	 */
+	public function cURL($request = [], $method = 'GET') {
+		if($method == "GET") { $post = 0; } else { $post = 1; }
+
+		$url = strval(Tools::getValue('REST_HOOK'));
+
+		$ch = curl_init();
+
+		curl_setopt_array($ch, [
+			CURLOPT_SSL_VERIFYHOST => false,
+			CURLOPT_SSL_VERIFYPEER => false,
+			CURLOPT_URL => $url,
+			CURLOPT_POST => $post,
+			CURLOPT_POSTFIELDS => http_build_query($request),
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_TIMEOUT => 30
+		]);
+
+		$server_output = curl_exec ($ch);
+
+		curl_close ($ch);
+
+		if ($data = json_decode($server_output)) { return $data; } else { return false; }
+	}
 }
