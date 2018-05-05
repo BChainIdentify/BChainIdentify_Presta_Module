@@ -20,7 +20,7 @@ class BChainIdentity extends Module {
 		parent::__construct();
 
 		$this->displayName = $this->l('BChainIdentity');
-		$this->description = $this->l('Use the blockchain to prevent fraudulent registrations and logins.');
+		$this->description = $this->l('Mit Hilfe der Blockchain gegen betrügerische Benutzer vorgehen.');
 
 		$this->confirmUninstall = $this->l('Wollen Sie das Modul wirklich deinstallieren?');
 
