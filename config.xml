@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
-    <name>mymodule</name>
+    <name>bchainidentity</name>
     <displayName><![CDATA[BChainIdentity]]></displayName>
     <version><![CDATA[1.0]]></version>
     <description><![CDATA[Use the blockchain to prevent fraudulent registrations and login.]]></description>

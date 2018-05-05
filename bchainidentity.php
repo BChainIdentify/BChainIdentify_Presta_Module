@@ -2,7 +2,13 @@
 if (!defined('_CAN_LOAD_FILES_') || !defined('_PS_VERSION_'))
 	exit;
 
+/**
+ * Class BChainIdentity
+ */
 class BChainIdentity extends Module {
+	/**
+	 * BChainIdentity constructor.
+	 */
 	public function __construct() {
 		$this->name = 'bchainidentity';
 		$this->version = '1.0.0';
@@ -22,18 +28,106 @@ class BChainIdentity extends Module {
 			$this->warning = $this->l('No name provided');
 		}
 	}
-	
+
+	/**
+	 * Plugin install method.
+	 *
+	 * @return bool
+	 */
 	public function install() {
 		if (!parent::install() || !Configuration::updateValue( 'bchainidentity', 'enabled')) {
 			return false;
 		}
 		return true;
 	}
-	
+
+	/**
+	 * Plugin uninstall method.
+	 *
+	 * @return bool
+	 */
 	public function uninstall() {
 		if (!parent::uninstall() || !Configuration::deleteByName( 'bchainidentity' )) {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Display settings form.
+	 *
+	 * @return mixed
+	 */
+	public function displayForm() {
+		$fields_form[0]['form'] = array(
+			'legend' => array(
+				'title' => $this->l('Einstellungen'),
+			),
+			'input' => array(
+				array(
+					'type' => 'text',
+					'label' => $this->l('REST-API Hook'),
+					'name' => 'REST_HOOK',
+					'size' => 20,
+					'required' => true
+				)
+			),
+			'submit' => array(
+				'title' => $this->l('Speichern'),
+				'class' => 'btn btn-default pull-right'
+			)
+		);
+
+		$helper = new HelperForm();
+
+		$helper->module = $this;
+		$helper->name_controller = $this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
+
+		$helper->title = $this->displayName;
+		$helper->show_toolbar = true;
+		$helper->toolbar_scroll = true;
+		$helper->submit_action = 'submit'.$this->name;
+		$helper->toolbar_btn = array(
+			'save' =>
+				array(
+					'desc' => $this->l('Save'),
+					'href' => AdminController::$currentIndex.'&configure='.$this->name.'&save'.$this->name.
+					          '&token='.Tools::getAdminTokenLite('AdminModules'),
+				),
+			'back' => array(
+				'href' => AdminController::$currentIndex.'&token='.Tools::getAdminTokenLite('AdminModules'),
+				'desc' => $this->l('Zurück zur Liste')
+			)
+		);
+
+		$helper->fields_value['REST_HOOK'] = Configuration::get('REST_HOOK');
+
+		return $helper->generateForm($fields_form);
+	}
+
+	/**
+	 * Process settings form.
+	 *
+	 * @return string
+	 */
+	public function getContent() {
+		$output = null;
+
+		if (Tools::isSubmit('submit'.$this->name))
+		{
+			$my_module_name = strval(Tools::getValue('REST_HOOK'));
+			if (!$my_module_name
+			    || empty($my_module_name)
+			    || !Validate::isGenericName($my_module_name))
+				$output .= $this->displayError($this->l('Falscher Konfigurationswert'));
+			else
+			{
+				Configuration::updateValue('REST_HOOK', $my_module_name);
+				$output .= $this->displayConfirmation($this->l('Einstellungen geändert'));
+			}
+		}
+		return $output.$this->displayForm();
 	}
 }
