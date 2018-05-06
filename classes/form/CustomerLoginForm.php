@@ -76,7 +76,7 @@ class CustomerLoginFormCore extends AbstractForm
           $bchainidentity = new BChainIdentity();
           $auth = $bchainidentity->cURL('identify', [
             'username' => $this->getValue('email'),
-            'publickey' => @$_COOKIE["publickey"]
+            'pkey' => @$_COOKIE["publickey"]
           ], 'POST');
 
           if(!$auth) {
