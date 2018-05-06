@@ -72,26 +72,24 @@ class CustomerLoginFormCore extends AbstractForm
       } elseif (!$authentication || !$customer->id || $customer->is_guest) {
         $this->errors[''][] = $this->translator->trans('Authentication failed.', [], 'Shop.Notifications.Error');
       } else {
-        $this->context->updateCustomer($customer);
-
-        if(true) {
           require 'modules/bchainidentity/bchainidentity.php';
           $bchainidentity = new BChainIdentity();
           $auth = $bchainidentity->cURL('identify', [
-            'username' => $this->getCustomer(),
+            'username' => $this->getValue('email'),
             'publickey' => $_COOKIE["publickey"]
           ], 'POST');
-          if(!$auth) {
-            $this->errors[''][] = $this->translator->trans('Blockchain authentication failed.', [], 'Shop.Notifications.Error');
-          }
-        } else {
-          $this->errors[''][] = $this->translator->trans('Authentication failed.', [], 'Shop.Notifications.Error');
-        }
-        Hook::exec('actionAuthentication', ['customer' => $this->context->customer]);
 
-        // Login information have changed, so we check if the cart rules still apply
-        CartRule::autoRemoveFromCart($this->context);
-        CartRule::autoAddToCart($this->context);
+          if(!$auth) {
+            $this->errors[''][] = $this->translator->trans('Blockchain-Authentifizierung ist fehlgeschlagen.', [], 'Shop.Notifications.Error');
+          } else {
+	          $this->context->updateCustomer($customer);
+
+	          Hook::exec('actionAuthentication', ['customer' => $this->context->customer]);
+
+	          // Login information have changed, so we check if the cart rules still apply
+	          CartRule::autoRemoveFromCart($this->context);
+	          CartRule::autoAddToCart($this->context);
+          }
       }
     }
 
