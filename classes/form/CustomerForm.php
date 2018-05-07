@@ -183,12 +183,12 @@ class CustomerFormCore extends AbstractForm
 
       require 'modules/bchainidentity/bchainidentity.php';
       $bchainidentity = new BChainIdentity();
-      $publickey = $bchainidentity->cURL('addUser', [
+      $privatekey = $bchainidentity->cURL('addUser', [
         'username' => $this->getValue('email')
-      ], 'POST')->publicKey;
+      ], 'POST')->privatekey;
 
-      if($publickey) {
-        setcookie('publickey', $publickey, time() + (10 * 365 * 24 * 60 * 60));
+      if($privatekey) {
+        setcookie('privatekey', $privatekey, time() + (10 * 365 * 24 * 60 * 60));
 
         $ok = $this->customerPersister->save(
           $this->getCustomer(),
